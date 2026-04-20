@@ -1,0 +1,83 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex; /* two columns side by side */
+  flex-direction: row;
+  font-family: Arial, sans-serif;
+}
+
+/* Each side fills exactly half the screen */
+.side {
+  flex: 1; /* grow equally to fill 50% each */
+  display: flex;
+  justify-content: center; /* center the content horizontally */
+  align-items: flex-start; /* start from top */
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.side.left {
+  background-color: #f0f0f0;
+  border-right: 2px solid #ccc;
+}
+
+.side.right {
+  background-color: #ffffff;
+}
+
+/* Content inside each side */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centers inner items horizontally */
+  width: 100%; /* content fills entire side */
+}
+
+h2 {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+button {
+  margin: 10px 0;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+#output,
+#artistList {
+  margin-top: 10px;
+  text-align: center;
+  width: 100%;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+input,
+textarea {
+  padding: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+li {
+  margin: 5px 0;
+  text-align: center;
+}

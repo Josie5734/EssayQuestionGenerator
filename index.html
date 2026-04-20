@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Essay Generator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="side left">
+      <div class="content">
+        <h2>Random Essay Question Generator</h2>
+        <button id="generateBtn">Generate Essay Prompts</button>
+        <div id="output"></div>
+      </div>
+    </div>
+
+    <div class="side right">
+      <div class="content">
+        <h2>Artists & Songs</h2>
+        <ul id="artistList"></ul>
+
+        <form id="artistForm">
+          <input
+            type="text"
+            id="newArtist"
+            placeholder="Artist Name"
+            required
+          />
+          <textarea
+            id="newSongs"
+            placeholder="Songs (comma separated)"
+            required
+          ></textarea>
+          <button type="submit">Add Artist</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>
