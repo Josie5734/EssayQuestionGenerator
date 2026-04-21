@@ -13,7 +13,7 @@ body {
 }
 
 .page-container {
-  width: 95%;
+  width: 90%;
   max-width: 1000px;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@ body {
 .content-box {
   min-height: 200px;
   max-height: 500px;
-  width: 60%;
+  width: min(90%, 800px);
   overflow-y: auto;
   box-sizing: border-box;
   white-space: pre-wrap;
