@@ -1,44 +1,28 @@
-// essay subjects
-const subjects = [
-  "Dynamics",
-  "Tempo, Metre and Rhythm",
-  "Structure",
-  "Melody",
-  "Instruments and Sonority",
-  "Texture",
-  "Harmony",
-];
+//globals
+let SETWORKS = {};
+let activeSetworks = {};
 
-// setwork artists and songs
-const setWorks = {
-  "Kate Bush": ["Cloudbusting", "And Dream Of Sheep", "Under Ice"],
-  "The Beatles": [
-    "Eleanor Rigby",
-    "Here,There and Everywhere",
-    "I Want To Tell You",
-    "Tomorrow Never Knows",
-  ],
-  "Batman Returns": [
-    "Birth of a Penguin pt-1",
-    "Birth of a Penguin pt-2",
-    "Batman VS the Circus",
-  ],
-  "Courtney Pine": [
-    "Lady Day and John Coltrane",
-    "Inner State Of Mind",
-    "Love and Affection",
-  ],
-  Psycho: [
-    "Prelude",
-    "The City",
-    "Marion",
-    "The Murder",
-    "The Toys",
-    "The Cellar",
-    "Discovery",
-    "Finale",
-  ],
-};
+let SUBJECTS = {};
+let activeSubjects = {};
+
+
+
+
+//load the setworks from the json file into an array
+async function loadSetworks() {
+  const response = await fetch("setworks.json"); //get file with setworks  in it 
+  const data = await response.json(); //load into data
+  return data;
+}
+
+//load subjects from json to array
+async function loadSubjects() {
+  const response = await fetch("subjects.json"); //get subjects file 
+  const data = await response.json(); //load to data 
+  return data;
+}
+
+
 
 
 //generation tools
@@ -59,91 +43,182 @@ function randomSample(arr, n) {
   return result;
 }
 
-//pick a random track from the setworks
-function pickSong() {
-  const artist = randomChoice(Object.keys(setWorks));
-  const song = randomChoice(setWorks[artist]);
-  return { artist, song };
-}
-
-
-//outputs
-
-//generate output
-function generate() {
-  const output = document.getElementById("output"); //the output object
-  output.innerHTML = "<p><strong>The random essay is:</strong></p>"; //title text
-
-  const artists = randomSample(Object.keys(setWorks), 4); //pick 4 random artists 
+//pick the 4 songs to use 
+function pickSongs(setWorks) {
+  const artists = randomSample(Object.keys(setWorks), 4); //pick 4 artists 
   const artistSongs = artists.map(artist => {
-    const song = randomChoice(setWorks[artist]); //pick 1 random song for each artist
+    const song = randomChoice(setWorks[artist]); //pick random one of artists songs 
     return { artist, song };
   })
+  return artistSongs; //return array of 4 { artist: song } objects
+}
 
-  //foreach song, generate 3 subjects to write about and output
-  artistSongs.forEach(({ artist, song }) => {
-    const [s1, s2, s3] = randomSample(subjects, 3);
-    output.innerHTML += `<p>Discuss ${artist}'s use of ${s1}, ${s2} and ${s3} in ${song}</p>`;
+//pick 3 subjects to use
+function pickSubjects(subjects) {
+  return randomSample(subjects, 3); //pick 3 random subjects from list
+}
+
+
+
+//box content generation
+
+//fill in questions box
+function generateQuestionsBox(SETWORKS, SUBJECTS) {
+  const box = document.getElementById("question-box"); //get box element
+  let full_text = ""; //placeholder for full box of text
+
+  const choices = pickSongs(SETWORKS); //get artist and song pairs in array of { artist, song }
+
+  choices.forEach(({ artist, song }, index) => {
+    const subjects = randomSample(SUBJECTS, 3) //get 3 subjects 
+    const text = `Discuss ${artist}'s use of ${subjects[0]}, ${subjects[1]} and ${subjects[2]} in ${song}`; //text template
+    full_text += text
+    if (index !== choices.length - 1) {
+      full_text += "\n\n"; //add newlines if not on the last item
+    }
+  });
+
+  box.textContent = full_text; //set text
+}
+
+//fill in subjects box
+function loadSubjectBox(subjects) {
+
+  let subjectBoxHTML = "<p><strong>Check/Uncheck to Include or Not Include in questions</strong></p>"; //full html for the entire box (starting with just title)
+
+  //generate html for each subject 
+  subjectBoxHTML += subjects.map(subject => `<p>${subject} <input type="checkbox" class="subject-check" data-subject="${subject}" checked /> </p>`).join("");
+
+  const box = document.getElementById("subject-box"); //get the subject-box 
+  box.innerHTML = subjectBoxHTML; //add the html
+
+  setupSubjectCheckboxListeners(); //setup the event listeners
+}
+
+//handle checkbox toggles 
+
+//toggle function
+function handleSubjectToggle(event) {
+  const box = event.target; //get checkbox item
+
+  const subject = box.dataset.subject //get subject
+
+  if (!box.checked) { //if box unchecked 
+    activeSubjects = activeSubjects.filter(s => s !== subject); //remove subject 
+    console.log("deleted " + subject)
+  } else { //else if box checked
+    activeSubjects.push(subject); //add item to list
+  }
+}
+
+//setup event listeners
+function setupSubjectCheckboxListeners() {
+  document.querySelectorAll(".subject-check").forEach(box => { //songs
+    box.addEventListener("change", handleSubjectToggle);
+  });
+}
+
+//fill in the artist box
+function loadArtistBox(setWorks) {
+
+  let artistBoxHTML = "<p><strong>Check/Uncheck to Include or Not Include in questions</strong></p>"; //full html for the entire box (starting with just title)
+
+  Object.entries(setWorks).forEach(([artist, songs]) => { //loop through each artist in the setWorks
+    const songHTML = songs.map(song => `<p>${song} <input type="checkbox" class="song-check" data-artist="${artist}" data-song="${song}" checked /> </p>`).join(""); //create a list of the songs 
+    const artistHTML = `<details class="artist-item">
+      <summary>
+        ${artist}
+        <input type="checkbox" class="artist-check" data-artist="${artist}" checked />
+      </summary>
+      ${songHTML}
+    </details>`;  //create the full html item for the artist
+
+    artistBoxHTML += artistHTML; //add it to the total
   })
+
+  const box = document.getElementById("artist-box"); //get the box 
+  box.innerHTML = artistBoxHTML; //add the html
+
+  setupArtistCheckboxListeners(); //add event listeners to artist and song checkboxes
 }
 
+//handle checkboxes for artist-box 
 
+//toggle songs on/off
+function handleSongToggle(event) {
+  const box = event.target; //get the checkbox 
 
-//form handling
+  const artist = box.dataset.artist; //get artist and song linked to box 
+  const song = box.dataset.song;
 
-//add an artist  (event for clicking the add button)
-document.getElementById("artistForm").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const artistName = document.getElementById("newArtist").value.trim();
-  const songs = document.getElementById("newSongs").value.split(",").map(s => s.trim()).filter(Boolean);
-  if (!artistName || songs.length === 0) return;
+  if (!box.checked) { //if box not checked
+    activeSetworks[artist] = activeSetworks[artist].filter(s => s !== song); //remove song 
 
-  setWorks[artistName] = songs;
-  document.getElementById("newArtist").value = "";
-  document.getElementById("newSongs").value = "";
-  updateArtistList();
-});
+    if (activeSetworks[artist].length === 0) { //remove artist if that was the last song
+      delete activeSetworks[artist];
+    }
+  } else { //else if box checked 
+    if (!activeSetworks[artist]) { //if artist doesnt exist 
+      activeSetworks[artist] = []; //add it 
+    }
 
-//remove an artist
-function removeArtist(artist) {
-  delete setWorks[artist];
-  updateArtistList();
-}
-
-//remove a specific song 
-function removeSong(artist, song) {
-  setWorks[artist] = setWorks[artist].filter(s => s !== song); //remove the song from artists songs
-  if (setWorks[artist].length === 0) delete setWorks[artist]; //delete artist if no songs left
-  updateArtistList();
-}
-
-
-
-// Update the artist list on the right side
-function updateArtistList() {
-  const ul = document.getElementById("artistList");
-  ul.innerHTML = "";
-  for (let artist in setWorks) {
-    const li = document.createElement("li");
-    li.innerHTML = `<strong>${artist}</strong>: ${setWorks[artist].join(", ")}
-                    <button onclick="removeArtist('${artist}')">Remove Artist</button>`;
-    // Add buttons for removing individual songs
-    setWorks[artist].forEach(song => {
-      const btn = document.createElement("button");
-      btn.textContent = `Remove "${song}"`;
-      btn.onclick = () => removeSong(artist, song);
-      li.appendChild(btn);
-    });
-    ul.appendChild(li);
+    if (!activeSetworks[artist].includes(song)) { //if song doesnt exist 
+      activeSetworks[artist].push(song); //add it 
+    }
   }
 }
 
 
+//toggle artists on/off
+function handleArtistToggle(event) {
+  const box = event.target; //get checkbox 
+  const artist = box.dataset.artist; //get artist from checkbox
+
+  if (!box.checked) { //if unchecked 
+    delete activeSetworks[artist]; //remove artist 
+  } else { //else checked 
+    activeSetworks[artist] = [...SETWORKS[artist]]; //add artist from main one
+  }
+}
 
 
-// listener for the Generate Essay button click
-document.querySelector("#generateBtn").addEventListener("click", generate);
+//add event listeners to artist and song checkboxes
+function setupArtistCheckboxListeners() {
+  document.querySelectorAll(".song-check").forEach(box => { //songs
+    box.addEventListener("change", handleSongToggle);
+  });
+  document.querySelectorAll(".artist-check").forEach(box => { //artists
+    box.addEventListener("change", handleArtistToggle);
+  });
+}
 
 
 
-updateArtistList();
+//startup stuff 
+
+//setup page with initial loads
+function setup() {
+  loadArtistBox(activeSetworks); //load the artist-box initially
+  loadSubjectBox(activeSubjects); //load subject box
+
+  //event listener on the generate button to generate questions
+  document.getElementById("generate-btn").addEventListener("click", () => {
+    generateQuestionsBox(activeSetworks, activeSubjects);
+  });
+}
+
+//make sure data from json files has been retrieved first
+async function loadData() {
+  SETWORKS = await loadSetworks(); //load setworks from file
+  SUBJECTS = await loadSubjects(); //load subjects from file
+
+  activeSetworks = structuredClone(SETWORKS); //copy of setworks for use 
+  activeSubjects = structuredClone(SUBJECTS); //copy of subjects for use
+
+  setup()
+}
+
+
+
+//run startup
+loadData();

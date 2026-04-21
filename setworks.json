@@ -1,0 +1,42 @@
+{
+  "Anoushka Shankar": ["Burn", "Breathing Under Water", "Easy"],
+  "Batman Returns": [
+    "Birth of a Penguin - Part 1",
+    "Birth of a Penguin - Part 2",
+    "Batman vs the Circus",
+    "The Rise and Fall from Grace"
+  ],
+  "Berlioz": ["Symphonie Fantastique - Movt 1"],
+  "Clara Schumann": ["Piano Trio in Gm, Op.17"],
+  "Courtney Pine": [
+    "Lady Day And (John Coltrane)",
+    "Inner State (Of Mind)",
+    "Love and Affection"
+  ],
+  "Debussy": ["Pagodes", "La Soiree Dans Grenade"],
+  "J.S.Bach": [
+    "Ein Feiste Burg Ist Unser Gott",
+    "Alles, Was Von Gott Geboren",
+    "Das Wort Sie Sollen Lassen Stahn"
+  ],
+  "Kate Bush": ["And Dream Of Sheep", "Cloudbusting", "Under Ice"],
+  "Psycho": [
+    "Prelude",
+    "The City",
+    "Marion",
+    "The Murder",
+    "The Toys",
+    "The Cellar",
+    "Discovery",
+    "Finale"
+  ],
+  "Saariaho": ["Petals"],
+  "Stravinsky": ["Introduction", "Les Augres Printaniers", "Jeu Du Rapt"],
+  "The Beatles": [
+    "Eleanor Rigby",
+    "Here, There and Everywhere",
+    "I Want To Tell You",
+    "Tomorrow Never Knows"
+  ],
+  "Vaughn Williams": ["On Wenlock Edge", "Is My Team Ploughing", "Bredon Hill"]
+}
