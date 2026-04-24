@@ -10,14 +10,14 @@ let activeSubjects = {};
 
 //load the setworks from the json file into an array
 async function loadSetworks() {
-  const response = await fetch("setworks.json"); //get file with setworks  in it 
+  const response = await fetch("data/setworks.json"); //get file with setworks  in it 
   const data = await response.json(); //load into data
   return data;
 }
 
 //load subjects from json to array
 async function loadSubjects() {
-  const response = await fetch("subjects.json"); //get subjects file 
+  const response = await fetch("data/subjects.json"); //get subjects file 
   const data = await response.json(); //load to data 
   return data;
 }
