@@ -147,7 +147,6 @@ function loadArtistBox(setWorks) {
 //toggle songs on/off
 function handleSongToggle(event) {
   const box = event.target; //get the checkbox 
-
   const artist = box.dataset.artist; //get artist and song linked to box 
   const song = box.dataset.song;
 
@@ -166,6 +165,17 @@ function handleSongToggle(event) {
       activeSetworks[artist].push(song); //add it 
     }
   }
+
+
+
+  //get all song checkboxes for this songs artist
+  const songBoxes = document.querySelectorAll(`.song-check[data-artist="${artist}"]`);
+
+  //get the artists checkbox
+  const artistBox = document.querySelector(`.artist-check[data-artist="${artist}"]`);
+
+  //check the artist box if any of the songs are checked, else uncheck
+  artistBox.checked = [...songBoxes].some(box => box.checked);
 }
 
 
@@ -174,7 +184,15 @@ function handleArtistToggle(event) {
   const box = event.target; //get checkbox 
   const artist = box.dataset.artist; //get artist from checkbox
 
-  if (!box.checked) { //if unchecked 
+  const checked = box.checked; //state of artist checkbox
+
+  //get all the song checkboxes for the artist
+  const songBoxes = document.querySelectorAll(`.song-check[data-artist="${artist}"]`);
+
+  //set them to the same state as the artist checkbox
+  songBoxes.forEach(songBox => { songBox.checked = checked; });
+
+  if (!checked) { //if unchecked 
     delete activeSetworks[artist]; //remove artist 
   } else { //else checked 
     activeSetworks[artist] = [...SETWORKS[artist]]; //add artist from main one
