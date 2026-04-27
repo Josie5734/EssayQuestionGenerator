@@ -53,10 +53,7 @@ function randomSample(arr, n) {
 //pick the 4 songs to use 
 function pickSongs() {
   const artists = randomSample(Object.keys(activeSetworks), 4); //pick 4 artists 
-  if (artists.length() < 4) {
-    console.log("less than 4 artists");
-    console.log(artists);
-  }
+
   const artistSongs = artists.map(artist => {
     const song = randomChoice(activeSetworks[artist]); //pick random one of artists songs 
     return { artist, song };
@@ -78,16 +75,31 @@ function generateQuestionsBox() {
   const box = document.getElementById("question-box"); //get box element
   let full_text = ""; //placeholder for full box of text
 
-  const choices = pickSongs(activeSetworks); //get artist and song pairs in array of { artist, song }
+  //get number of songs in activeSetworks
+  const num_songs = Object.values(activeSetworks).reduce((sum, songs) => sum + songs.length, 0);
 
-  choices.forEach(({ artist, song }, index) => {
-    const subjects = randomSample(activeSubjects, 3) //get 3 subjects 
-    const text = `Discuss ${artist}'s use of ${subjects[0]}, ${subjects[1]} and ${subjects[2]} in ${song}`; //text template
-    full_text += text
-    if (index !== choices.length - 1) {
-      full_text += "\n\n"; //add newlines if not on the last item
+  //get number of subjects in activeSubjects
+  const num_subjects = activeSubjects.length
+
+  //if atleast 4 songs active
+  if (num_songs >= 4) {
+    if (num_subjects >= 3) { //and atleast 3 subjects active, generate question
+      const choices = pickSongs(activeSetworks); //get artist and song pairs in array of { artist, song }
+
+      choices.forEach(({ artist, song }, index) => {
+        const subjects = randomSample(activeSubjects, 3) //get 3 subjects 
+        const text = `Discuss ${artist}'s use of ${subjects[0]}, ${subjects[1]} and ${subjects[2]} in ${song}`; //text template
+        full_text += text
+        if (index !== choices.length - 1) {
+          full_text += "\n\n"; //add newlines if not on the last item
+        }
+      });
+    } else { //if not atleast 3 subjects, output "error"
+      full_text = "Tick atleast 3 subjects to generate a question"
     }
-  });
+  } else { //if not atleast 4 songs, output "error"
+    full_text = "Tick atleast 4 songs to generate a question"
+  }
 
   box.textContent = full_text; //set text
 }
