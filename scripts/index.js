@@ -112,6 +112,10 @@ function loadSubjectBox() {
   //generate html for each subject 
   subjectBoxHTML += activeSubjects.map(subject => `<p>${subject} <input type="checkbox" class="subject-check" data-subject="${subject}" checked /> </p>`).join("");
 
+  //un/tick all buttons
+  subjectBoxHTML += ` 
+<button id="tick-all-subjects">Tick All</button><button id="untick-all-subjects">Untick All</button>`
+
   const box = document.getElementById("subject-box"); //get the subject-box 
   box.innerHTML = subjectBoxHTML; //add the html
 
@@ -128,10 +132,23 @@ function handleSubjectToggle(event) {
 
   if (!box.checked) { //if box unchecked 
     activeSubjects = activeSubjects.filter(s => s !== subject); //remove subject 
-    console.log("deleted " + subject)
   } else { //else if box checked
     activeSubjects.push(subject); //add item to list
   }
+}
+
+//reset every subject checkbox to be ticked again
+function tickAllSubjects() {
+  activeSubjects = structuredClone(SUBJECTS); //set activeSubjects to have everything 
+
+  document.querySelectorAll(".subject-check").forEach(box => box.checked = true); //check all subjects
+}
+
+//set every subject checkbox to be unticked
+function untickAllSubjects() {
+  activeSubjects = []; //set activeSubjects to be empty
+
+  document.querySelectorAll(".subject-check").forEach(box => box.checked = false); //uncheck all subjects
 }
 
 //setup event listeners
@@ -139,6 +156,11 @@ function setupSubjectCheckboxListeners() {
   document.querySelectorAll(".subject-check").forEach(box => { //songs
     box.addEventListener("change", handleSubjectToggle);
   });
+
+  //toggle buttons
+  document.getElementById("tick-all-subjects").addEventListener("click", tickAllSubjects);
+  document.getElementById("untick-all-subjects").addEventListener("click", untickAllSubjects);
+
 }
 
 //fill in the artist box
@@ -158,6 +180,9 @@ function loadArtistBox(setWorks) {
 
     artistBoxHTML += artistHTML; //add it to the total
   })
+
+  artistBoxHTML += `
+    <button id="tick-all-setworks">Tick All</button><button id="untick-all-setworks">Untick All</button>` //add buttons
 
   const box = document.getElementById("artist-box"); //get the box 
   box.innerHTML = artistBoxHTML; //add the html
@@ -201,7 +226,6 @@ function handleSongToggle(event) {
   artistBox.checked = [...songBoxes].some(box => box.checked);
 }
 
-
 //toggle artists on/off
 function handleArtistToggle(event) {
   const box = event.target; //get checkbox 
@@ -222,6 +246,23 @@ function handleArtistToggle(event) {
   }
 }
 
+//reset every artist/song checkbox to be ticked again
+function tickAllSetworks() {
+  activeSetworks = structuredClone(SETWORKS); //set activeSetworks to have everything
+
+  document.querySelectorAll(".artist-check").forEach(box => box.checked = true); //check all artist checkboxes
+
+  document.querySelectorAll(".song-check").forEach(box => box.checked = true); //same for songs 
+}
+
+//set every artist/song checkbox to be unticked
+function untickAllSetworks() {
+  activeSetworks = []; //set activeSetworks to be empty
+
+  document.querySelectorAll(".artist-check").forEach(box => box.checked = false); //uncheck all artist checkboxes
+
+  document.querySelectorAll(".song-check").forEach(box => box.checked = false); //same for songs 
+}
 
 //add event listeners to artist and song checkboxes
 function setupArtistCheckboxListeners() {
@@ -231,8 +272,11 @@ function setupArtistCheckboxListeners() {
   document.querySelectorAll(".artist-check").forEach(box => { //artists
     box.addEventListener("change", handleArtistToggle);
   });
-}
 
+  //toggle buttons
+  document.getElementById("tick-all-setworks").addEventListener("click", tickAllSetworks);
+  document.getElementById("untick-all-setworks").addEventListener("click", untickAllSetworks);
+}
 
 
 //startup stuff 
