@@ -1,3 +1,14 @@
+:root {
+  --bg-primary: #ffffff;
+  --bg-surface: #e5e7eb;
+  --bg-elevated: #d1d5db;
+  --accent: #38bdf8;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --green: #10b981;
+  --red: #ef4444;
+}
+
 html,
 body {
   height: auto;
@@ -11,6 +22,17 @@ body {
   display: flex;
   justify-content: center;
   text-align: center;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+body.darkmode {
+  --bg-primary: #0f172a;
+  --bg-surface: #1e293b;
+  --bg-elevated: #334155;
+  --accent: #38bdf8;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
 }
 
 .page-container {
@@ -29,8 +51,9 @@ body {
   overflow-y: auto;
   box-sizing: border-box;
   white-space: pre-wrap;
-  background-color: lightgray;
-  border: 2px solid black;
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  border: 2px solid var(--text-secondary);
   border-radius: 5px;
   padding: 10px;
 }
@@ -48,13 +71,11 @@ input {
   cursor: pointer;
 }
 
-body.darkmode {
-  background-color: #0f172a;
-  color: #f1f5f9;
+input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
 }
 
-body.darkmode .content-box {
-  background-color: #1e293b;
-  color: #f1f5f9;
-  border: 2px solid #94a3b8;
+#generate-btn {
+  font-size: 20px;
 }

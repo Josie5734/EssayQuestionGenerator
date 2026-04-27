@@ -6,6 +6,13 @@ let SUBJECTS = {};
 let activeSubjects = {};
 
 
+//TODO:
+//need some way to detect when:
+//less than 4 artists picked
+//less than 4 songs picked
+//less than 3 subjects picked
+//.
+//then decide how to handle that 
 
 
 //load the setworks from the json file into an array
@@ -44,18 +51,22 @@ function randomSample(arr, n) {
 }
 
 //pick the 4 songs to use 
-function pickSongs(setWorks) {
-  const artists = randomSample(Object.keys(setWorks), 4); //pick 4 artists 
+function pickSongs() {
+  const artists = randomSample(Object.keys(activeSetworks), 4); //pick 4 artists 
+  if (artists.length() < 4) {
+    console.log("less than 4 artists");
+    console.log(artists);
+  }
   const artistSongs = artists.map(artist => {
-    const song = randomChoice(setWorks[artist]); //pick random one of artists songs 
+    const song = randomChoice(activeSetworks[artist]); //pick random one of artists songs 
     return { artist, song };
   })
   return artistSongs; //return array of 4 { artist: song } objects
 }
 
 //pick 3 subjects to use
-function pickSubjects(subjects) {
-  return randomSample(subjects, 3); //pick 3 random subjects from list
+function pickSubjects() {
+  return randomSample(activeSubjects, 3); //pick 3 random subjects from list
 }
 
 
@@ -63,14 +74,14 @@ function pickSubjects(subjects) {
 //box content generation
 
 //fill in questions box
-function generateQuestionsBox(SETWORKS, SUBJECTS) {
+function generateQuestionsBox() {
   const box = document.getElementById("question-box"); //get box element
   let full_text = ""; //placeholder for full box of text
 
-  const choices = pickSongs(SETWORKS); //get artist and song pairs in array of { artist, song }
+  const choices = pickSongs(activeSetworks); //get artist and song pairs in array of { artist, song }
 
   choices.forEach(({ artist, song }, index) => {
-    const subjects = randomSample(SUBJECTS, 3) //get 3 subjects 
+    const subjects = randomSample(activeSubjects, 3) //get 3 subjects 
     const text = `Discuss ${artist}'s use of ${subjects[0]}, ${subjects[1]} and ${subjects[2]} in ${song}`; //text template
     full_text += text
     if (index !== choices.length - 1) {
@@ -82,12 +93,12 @@ function generateQuestionsBox(SETWORKS, SUBJECTS) {
 }
 
 //fill in subjects box
-function loadSubjectBox(subjects) {
+function loadSubjectBox() {
 
   let subjectBoxHTML = "<p><strong>Check/Uncheck to Include or Not Include in questions</strong></p>"; //full html for the entire box (starting with just title)
 
   //generate html for each subject 
-  subjectBoxHTML += subjects.map(subject => `<p>${subject} <input type="checkbox" class="subject-check" data-subject="${subject}" checked /> </p>`).join("");
+  subjectBoxHTML += activeSubjects.map(subject => `<p>${subject} <input type="checkbox" class="subject-check" data-subject="${subject}" checked /> </p>`).join("");
 
   const box = document.getElementById("subject-box"); //get the subject-box 
   box.innerHTML = subjectBoxHTML; //add the html
@@ -221,7 +232,7 @@ function setup() {
 
   //event listener on the generate button to generate questions
   document.getElementById("generate-btn").addEventListener("click", () => {
-    generateQuestionsBox(activeSetworks, activeSubjects);
+    generateQuestionsBox();
   });
 }
 
