@@ -88,7 +88,7 @@ function generateQuestionsBox() {
 
       choices.forEach(({ artist, song }, index) => {
         const subjects = randomSample(activeSubjects, 3) //get 3 subjects 
-        const text = `Discuss ${artist}'s use of ${subjects[0]}, ${subjects[1]} and ${subjects[2]} in ${song}`; //text template
+        const text = `Discuss <strong>${artist}'s</strong> use of <strong>${subjects[0]}</strong>, <strong>${subjects[1]}</strong> and <strong>${subjects[2]}</strong> in <strong>${song}</strong>`; //text template
         full_text += text
         if (index !== choices.length - 1) {
           full_text += "\n\n"; //add newlines if not on the last item
@@ -101,7 +101,7 @@ function generateQuestionsBox() {
     full_text = "Tick atleast 4 songs to generate a question"
   }
 
-  box.textContent = full_text; //set text
+  box.innerHTML = full_text; //set text
 }
 
 //fill in subjects box
