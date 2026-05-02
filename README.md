@@ -13,5 +13,3 @@ I made this to assist me in revising for this question as there are a limited nu
 Click generate to generate a question
 
 Each subject, artist and song has a checkbox, which removes that subject/artist/song from being used in a generated question
-
-As of now, atleast 3 subjects and 4 songs must be checked for a question to be generated. This will be reworked at some point

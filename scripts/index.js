@@ -79,7 +79,7 @@ function generateQuestionsBox() {
   const num_songs = Object.values(activeSetworks).reduce((sum, songs) => sum + songs.length, 0);
 
   //get number of subjects in activeSubjects
-  const num_subjects = activeSubjects.length
+  const num_subjects = activeSubjects.length;
 
   //if atleast 4 songs active
   if (num_songs >= 4) {
